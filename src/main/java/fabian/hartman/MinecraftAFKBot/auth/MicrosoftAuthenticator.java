@@ -6,13 +6,6 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import fabian.hartman.MinecraftAFKBot.auth.msa.*;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.FlowPane;
 import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
 import fabian.hartman.MinecraftAFKBot.utils.reflect.MethodAccessor;
 import fabian.hartman.MinecraftAFKBot.utils.reflect.Reflect;
@@ -36,7 +29,6 @@ public class MicrosoftAuthenticator implements IAuthenticator {
     public Optional<AuthData> authenticate() {
         System.out.println("Trying to authenticate at Microsoft...");
         String refreshToken = readRefreshToken();
-        CompletableFuture<Alert> authDialog = null;
 
         try {
             if (refreshToken == null) {
@@ -61,7 +53,6 @@ public class MicrosoftAuthenticator implements IAuthenticator {
                     refreshToken = RefreshTokenCallback.await(callback, CLIENT_ID);
                 } catch (ObtainTokenException ex) {
                     ex.printStackTrace();
-                    closeDialog(authDialog);
                     MinecraftAFKBot.getInstance().getCurrentBot().setPreventStartup(true);
                     return Optional.empty();
                 }
@@ -71,11 +62,8 @@ public class MicrosoftAuthenticator implements IAuthenticator {
 
             if (refreshToken == null) {
                 System.out.println("Error while creating refresh token... Please try again");
-                closeDialog(authDialog);
                 return Optional.empty();
             }
-
-            setDialogProgress(authDialog, 0.1);
 
             try {
                 Files.write(refreshToken, MinecraftAFKBot.getInstance().getRefreshTokenFile(), StandardCharsets.UTF_8);
@@ -84,54 +72,19 @@ public class MicrosoftAuthenticator implements IAuthenticator {
             }
 
             AuthenticationService authService = new MsaAuthenticationService(CLIENT_ID, refreshToken);
-            setDialogProgress(authDialog, 0.2);
             AccessTokenCallback callback = AccessTokenGenerator.createAccessToken(refreshToken, CLIENT_ID);
 
             if (callback == null) {
                 System.out.println("Error while creating access token... Please try again");
-                closeDialog(authDialog);
                 return Optional.empty();
             }
-            setDialogProgress(authDialog, 0.5);
             JsonObject object = GSON.toJsonTree(LOGIN_RESPONSE_ACCESSOR.invoke(authService, "d=" + callback.getAccessToken())).getAsJsonObject();
             authService.setAccessToken(object.get("access_token").getAsString());
-            setDialogProgress(authDialog, 0.9);
             MicrosoftAuthenticator.GET_PROFILE_ACCESSOR.invoke(authService);
-            closeDialog(authDialog);
             return Optional.of(new AuthData(authService.getAccessToken(), authService.getSelectedProfile().getIdAsString(), authService.getSelectedProfile().getName()));
         } catch (Throwable e) {
             e.printStackTrace();
-            closeDialog(authDialog);
             return Optional.empty();
-        }
-    }
-
-    private void setDialogProgress(CompletableFuture<Alert> authDialog, double progress) {
-        modifyDialog(authDialog, alert -> {
-            Node flowPane = alert.getDialogPane().contentProperty().get();
-            if (flowPane instanceof FlowPane) {
-                ObservableList<Node> children = ((FlowPane) flowPane).getChildren();
-                if (children.size() >= 3) {
-                    Node progressBar = children.get(2);
-                    if (progressBar instanceof ProgressBar) {
-                        ((ProgressBar) progressBar).setProgress(progress);
-                    }
-                }
-            }
-        });
-    }
-
-    private void closeDialog(CompletableFuture<Alert> authDialog) {
-        modifyDialog(authDialog, alert -> {
-            alert.setResult(ButtonType.OK);
-            alert.close();
-        });
-    }
-
-    private void modifyDialog(CompletableFuture<Alert> authDialog, Consumer<Alert> consumer) {
-        if (authDialog != null) {
-            Alert alert = authDialog.join();
-            Platform.runLater(() -> consumer.accept(alert));
         }
     }
 

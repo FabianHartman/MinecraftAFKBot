@@ -44,8 +44,6 @@ public class PacketOutChatMessage extends Packet {
                 writeVarInt(signature.getSignature().length, out);
                 out.write(signature.getSignature());
                 out.writeBoolean(false);
-
-                MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().setLastUsedSignature(Optional.of(signature));
             }
 
             if (protocolId >= ProtocolConstants.MC_1_19_1) {
@@ -75,11 +73,11 @@ public class PacketOutChatMessage extends Packet {
                 out.writeLong(signature.getSalt());
                 out.writeBoolean(true);
                 out.write(signature.getSignature());
-                writeVarInt(0, out);                  // lastSeen sigs offset?
+                writeVarInt(0, out);
                 writeFixedBitSet(new BitSet(), 20, out);
-                if (protocolId >= ProtocolConstants.MC_1_21_5)
-                    out.writeByte(0);                        // checksum, always 0 should be ok
-                MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().setLastUsedSignature(Optional.of(signature));
+                if (protocolId >= ProtocolConstants.MC_1_21_5) {
+                    out.writeByte(0);
+                }
             }
         }
     }

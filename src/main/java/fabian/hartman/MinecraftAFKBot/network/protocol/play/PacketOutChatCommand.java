@@ -55,7 +55,8 @@ public class PacketOutChatCommand extends Packet {
             UUID signer = null;
             try {
                 signer = UUID.fromString(MinecraftAFKBot.getInstance().getCurrentBot().getAuthData().getUuid());
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
 
             CryptManager.ArgumentSignatures signatures = CryptManager.signCommandArguments(keys, signer, arguments);
             out.writeLong(signatures.getTimestamp().toEpochMilli());
@@ -67,19 +68,15 @@ public class PacketOutChatCommand extends Packet {
                 if (protocolId < ProtocolConstants.MC_1_19_3)
                     writeVarInt(signature.getSignature().length, out);
                 out.write(signature.getSignature());
-                if (i == signatures.getArgumentSignatures().size() - 1)
-                    MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().setLastUsedSignature(Optional.of(
-                            new CryptManager.MessageSignature(signature.getSignature(), signatures.getSalt(), signatures.getTimestamp())
-                    ));
-            }
-            if (protocolId < ProtocolConstants.MC_1_19_3)
-                out.writeBoolean(false);
-            if (protocolId >= ProtocolConstants.MC_1_19_1) {
-                writeVarInt(0, out);
                 if (protocolId < ProtocolConstants.MC_1_19_3)
                     out.writeBoolean(false);
-                else
-                    writeFixedBitSet(new BitSet(), 20, out);
+                if (protocolId >= ProtocolConstants.MC_1_19_1) {
+                    writeVarInt(0, out);
+                    if (protocolId < ProtocolConstants.MC_1_19_3)
+                        out.writeBoolean(false);
+                    else
+                        writeFixedBitSet(new BitSet(), 20, out);
+                }
             }
         }
     }

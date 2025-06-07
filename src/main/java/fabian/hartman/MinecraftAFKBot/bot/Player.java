@@ -172,10 +172,6 @@ public class Player implements Listener {
         MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutChatCommand(command, signableArguments));
     }
 
-    public void use() {
-        MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutUseItem(this));
-    }
-
     public int incrementChatSessionIndex() {
         return this.chatSessionIndex++;
     }

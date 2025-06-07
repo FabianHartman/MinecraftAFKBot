@@ -1,8 +1,6 @@
 package fabian.hartman.MinecraftAFKBot.io.config;
 
 import com.google.gson.*;
-import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
-import fabian.hartman.MinecraftAFKBot.bot.registry.legacy.LegacyEnchantmentType;
 import fabian.hartman.MinecraftAFKBot.utils.ConvertUtils;
 import fabian.hartman.MinecraftAFKBot.utils.ReflectionUtils;
 
@@ -117,11 +115,6 @@ public class PropertyProcessor {
                 return false;
 
             List<String> newNames = new ArrayList<>();
-            for (String enchantment : enchantments) {
-                try {
-                    newNames.add(LegacyEnchantmentType.valueOf(enchantment).getName());
-                } catch (Throwable ignore) {}
-            }
             ReflectionUtils.setField(field, config, newNames);
             return true;
         }
