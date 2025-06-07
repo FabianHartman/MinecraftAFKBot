@@ -7,7 +7,7 @@
 
     <groupId>fabian.hartman.minecraft</groupId>
     <artifactId>MinecraftAFKBot</artifactId>
-    <version>2.13.1</version>
+    <version>1.0.0</version>
     <name>MinecraftAFKBot</name>
     <description>An AFK bot for Minecraft</description>
 

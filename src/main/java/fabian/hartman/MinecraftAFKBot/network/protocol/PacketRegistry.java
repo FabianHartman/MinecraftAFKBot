@@ -140,7 +140,6 @@ public class PacketRegistry {
                     case "minecraft:ping": return PacketInPing.class;
                     case "minecraft:resource_pack_push": return PacketInResourcePack.class;
                     case "minecraft:select_known_packs": return PacketInKnownPacks.class;
-                    case "minecraft:registry_data": return PacketInRegistryData.class;
                     case "minecraft:disconnect": return PacketInDisconnect.class;
                 }
             } else if (flow == ProtocolFlow.OUTGOING_PACKET) {

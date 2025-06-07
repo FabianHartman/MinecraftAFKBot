@@ -29,6 +29,6 @@ public class PacketInUpdateHealth extends Packet {
         this.food = readVarInt(in);
         this.saturation = in.readFloat();
 
-        MinecraftAFKBot.getInstance().getCurrentBot().getEventManager().callEvent(new UpdateHealthEvent(MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getEntityID(), getHealth(), getFood(), getSaturation()));
+        MinecraftAFKBot.getInstance().getCurrentBot().getEventManager().callEvent(new UpdateHealthEvent(MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getEntityID(), getHealth()));
     }
 }

@@ -16,7 +16,6 @@ public class PlayerCommandExecutor implements CommandExecutor {
         return privateMsgPlayer != null;
     }
 
-    @Override
     public CommandExecutionType getType() {
         return shouldAnswerPrivate() ? CommandExecutionType.OTHER_PLAYER_PRIVATE : CommandExecutionType.OTHER_PLAYER;
     }

@@ -311,8 +311,6 @@ public class PacketInJoinGame extends Packet {
         }
 
         MinecraftAFKBot.getInstance().getCurrentBot().getEventManager().callEvent(
-                new JoinGameEvent(eid, gamemode, worldIdentifier, dimension, spawnWorld,
-                        hashedSeed, difficulty, maxPlayers, viewDistance, simulationDistance, levelType,
-                        reducedDebugInfo, enableRespawnScreen, debug, flat));
+                new JoinGameEvent(eid));
     }
 }

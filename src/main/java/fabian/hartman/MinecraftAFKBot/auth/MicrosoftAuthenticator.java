@@ -20,7 +20,7 @@ public class MicrosoftAuthenticator implements IAuthenticator {
     private final static MethodAccessor LOGIN_RESPONSE_ACCESSOR = Reflect.getMethod(MsaAuthenticationService.class, "getLoginResponseFromToken", String.class);
     private final static MethodAccessor GET_PROFILE_ACCESSOR = Reflect.getMethod(MsaAuthenticationService.class, "getProfile");
 
-    public static final String CLIENT_ID = "6a0913ab-80bc-46fb-acfd-a5539bc910df";
+    public static final String CLIENT_ID = "2fee57a7-44d0-43d0-98b7-4b570046230e";
     private final static Gson GSON = new Gson();
 
     @Override
