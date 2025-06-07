@@ -5,7 +5,7 @@ if [ "$1" = 'afk-bot' ]; then
     echo "No config file was found! Creating a new config file".
     rm 2>/dev/null 1>&2 -rf /tmp/afkbot-init/logs
     mkdir -p /tmp/afkbot-init/logs
-    /usr/bin/fishing-bot -nogui -logsdir /tmp/afkbot-init/logs -config /tmp/afkbot-init/config.json -onlyCreateConfig
+    /usr/bin/fishing-bot -logsdir /tmp/afkbot-init/logs -config /tmp/afkbot-init/config.json -onlyCreateConfig
     jq ".server.ip = \"${MC_SERVER}\"" /tmp/afkbot-init/config.json |
       jq ".server.port = ${MC_PORT}" |
       jq ".server.\"default-protocol\" = \"${MC_PROTOCOL}\"" |

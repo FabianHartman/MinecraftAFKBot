@@ -8,18 +8,11 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         Options options = new Options();
-        options.addOption("nogui", false, "disables GUI");
         options.addOption("help", false, "shows help message");
         options.addOption("logsdir", true, "specifies where to save the logs");
         options.addOption("config", true, "specifies the path to the config");
         options.addOption("refreshToken", "accountfile", true, "specifies the path to the refreshToken which is used to login to Microsoft");
         options.addOption("onlyCreateConfig", false, "shut down the bot after the config is created");
-
-        // add nogui option if Desktop is not supported
-        if (!Desktop.isDesktopSupported()) {
-            args = Arrays.copyOfRange(args, 0, args.length + 1);
-            args[args.length - 1] = "-nogui";
-        }
 
         CommandLineParser optionsParser = new DefaultParser();
         try {

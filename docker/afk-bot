@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 if [ $# -eq 0 ]; then
-  java -jar /usr/lib/afkbot/MinecraftAFKBot.jar -nogui -logsdir /var/log/afkbot/ -config /usr/lib/afkbot/data/config.json -refreshToken /usr/lib/afkbot/data/refreshToken
+  java -jar /usr/lib/afkbot/MinecraftAFKBot.jar -logsdir /var/log/afkbot/ -config /usr/lib/afkbot/data/config.json -refreshToken /usr/lib/afkbot/data/refreshToken
 else
   java -jar /usr/lib/afkbot/MinecraftAFKBot.jar "$@"
 fi

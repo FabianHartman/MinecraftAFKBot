@@ -50,7 +50,6 @@ public class Bot {
     @Getter @Setter private AuthData authData;
     @Getter @Setter private boolean wontConnect = false;
     @Getter         private ExecutorService commandsThread;
-    @Getter         private final boolean noGui;
 
     @Getter         private final EventManager eventManager;
     @Getter         private CommandRegistry commandRegistry;
@@ -69,7 +68,6 @@ public class Bot {
         MinecraftAFKBot.getInstance().setCurrentBot(this);
         this.eventManager = new EventManager();
         this.moduleManager = new ModuleManager();
-        this.noGui = cmdLine.hasOption("nogui");
 
         if (cmdLine.hasOption("config"))
             this.config = new SettingsConfig(cmdLine.getOptionValue("config"));
