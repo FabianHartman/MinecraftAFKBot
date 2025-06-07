@@ -20,7 +20,7 @@ public class MicrosoftAuthenticator implements IAuthenticator {
     private final static MethodAccessor LOGIN_RESPONSE_ACCESSOR = Reflect.getMethod(MsaAuthenticationService.class, "getLoginResponseFromToken", String.class);
     private final static MethodAccessor GET_PROFILE_ACCESSOR = Reflect.getMethod(MsaAuthenticationService.class, "getProfile");
 
-    public static final String CLIENT_ID = "2fee57a7-44d0-43d0-98b7-4b570046230e";
+    public static final String CLIENT_ID = "fef9faea-d962-4476-9ce7-4960c8baa946";
     private final static Gson GSON = new Gson();
 
     @Override
@@ -76,7 +76,10 @@ public class MicrosoftAuthenticator implements IAuthenticator {
                 System.out.println("Error while creating access token... Please try again");
                 return Optional.empty();
             }
-            JsonObject object = GSON.toJsonTree(LOGIN_RESPONSE_ACCESSOR.invoke(authService, "d=" + callback.getAccessToken())).getAsJsonObject();
+
+            Object aa = LOGIN_RESPONSE_ACCESSOR.invoke(authService, "d=" + callback.getAccessToken());
+
+            JsonObject object = GSON.toJsonTree(aa).getAsJsonObject();
             authService.setAccessToken(object.get("access_token").getAsString());
             MicrosoftAuthenticator.GET_PROFILE_ACCESSOR.invoke(authService);
             return Optional.of(new AuthData(authService.getAccessToken(), authService.getSelectedProfile().getIdAsString(), authService.getSelectedProfile().getName()));

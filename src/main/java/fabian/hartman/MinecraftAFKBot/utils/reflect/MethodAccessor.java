@@ -1,7 +1,5 @@
 package fabian.hartman.MinecraftAFKBot.utils.reflect;
 
-import java.lang.reflect.Method;
-
 public interface MethodAccessor {
     <T> T invoke(Object instance, Object... args);
 }
