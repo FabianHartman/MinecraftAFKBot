@@ -10,7 +10,7 @@ services:
       # MC_PROTOCOL: AUTOMATIC
     volumes:
       # to persist and edit the config file and the refreshToken, uncomment the line below
-      # - ./fishingbot-data:/usr/lib/fishingbot/data
-      - logs:/var/log/fishingbot/
+      # - ./afkbot-data:/usr/lib/afkbot/data
+      - logs:/var/log/afkbot/
 volumes:
   logs:

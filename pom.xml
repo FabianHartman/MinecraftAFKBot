@@ -197,7 +197,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>systems.kinau.fishingbot.Main</mainClass>
+                    <mainClass>fabian.hartman.minecraft.MinecraftAFKBot.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -211,7 +211,7 @@
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Main-Class>systems.kinau.fishingbot.Main</Main-Class>
+                            <Main-Class>fabian.hartman.MinecraftAFKBot.Main</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

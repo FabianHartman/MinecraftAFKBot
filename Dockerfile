@@ -4,9 +4,9 @@ COPY . .
 RUN mvn package
 
 FROM adoptopenjdk/openjdk16:alpine
-COPY --from=builder /srv/build/target/FishingBot-*.jar /usr/lib/fishingbot/FishingBot.jar
+COPY --from=builder /srv/build/target/MinecraftAFKBot-*.jar /usr/lib/afkboy/MinecraftAFKBot.jar
 COPY ./docker/docker-entrypoint.sh /
-COPY docker/fishing-bot /usr/bin/fishing-bot
+COPY docker/afk-bot /usr/bin/afk-bot
 RUN apk add bash jq
 ENV MC_SERVER=127.0.0.1
 ENV MC_PORT=25565

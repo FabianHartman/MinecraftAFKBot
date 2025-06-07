@@ -7,7 +7,7 @@ import joptsimple.OptionSpec;
 import net.minecraft.OneSixParamStorage;
 import net.minecraft.client.util.Session.AccountType;
 import org.jetbrains.annotations.Nullable;
-import systems.kinau.fishingbot.FishingBot;
+import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println("FishingBot Minecraft Launcher Integration");
+        System.out.println("AFKBot Minecraft Launcher Integration");
 
         OptionParser optionParser = new OptionParser();
         optionParser.allowsUnrecognizedOptions();
@@ -36,7 +36,7 @@ public class Main {
         optionParser.accepts("checkGlErrors");
         OptionSpec<String> optionSpec2 = optionParser.accepts("server").withRequiredArg();
         OptionSpec<Integer> optionSpec3 = optionParser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(25565);
-        OptionSpec<File> optionSpec4 = optionParser.accepts("gameDir").withRequiredArg().ofType(File.class).defaultsTo(FishingBot.getExecutionDirectory());
+        OptionSpec<File> optionSpec4 = optionParser.accepts("gameDir").withRequiredArg().ofType(File.class).defaultsTo(MinecraftAFKBot.getExecutionDirectory());
         OptionSpec<File> optionSpec5 = optionParser.accepts("assetsDir").withRequiredArg().ofType(File.class);
         OptionSpec<File> optionSpec6 = optionParser.accepts("resourcePackDir").withRequiredArg().ofType(File.class);
         OptionSpec<String> optionSpec7 = optionParser.accepts("proxyHost").withRequiredArg();
@@ -98,7 +98,7 @@ public class Main {
         oneSix.setUserType(getOption(optionSet, optionSpec24));
         oneSix.setVersionType(getOption(optionSet, optionSpec25));
 
-        systems.kinau.fishingbot.Main.main(new String[0]);
+        fabian.hartman.MinecraftAFKBot.Main.main(new String[0]);
     }
 
     @Nullable
