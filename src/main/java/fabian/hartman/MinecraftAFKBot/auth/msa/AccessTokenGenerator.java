@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class AccessTokenGenerator {
-
     private static final HttpClient CLIENT = HttpClientBuilder.create().build();
 
     public static AccessTokenCallback createAccessToken(String refreshToken, String clientId) {

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 public class Authenticator {
     public Optional<AuthData> authenticate() {
-        // Automatically change auth service if OneSixLauncher is available
         OneSixParamStorage oneSix = OneSixParamStorage.getInstance();
 
         if (oneSix != null) {

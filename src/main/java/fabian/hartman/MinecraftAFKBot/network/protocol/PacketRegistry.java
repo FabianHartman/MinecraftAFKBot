@@ -32,52 +32,27 @@ import fabian.hartman.MinecraftAFKBot.network.protocol.login.PacketOutLoginPlugi
 import fabian.hartman.MinecraftAFKBot.network.protocol.login.PacketOutLoginStart;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInChatPlayer;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInChatSystem;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInChunkBatchFinished;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInCommands;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInConfirmTransaction;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInDestroyEntities;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInDifficultySet;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInEntityMetadata;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInEntityPosition;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInEntityPositionRotation;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInEntityPositionSync;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInEntityTeleport;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInEntityVelocity;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInHeldItemChange;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInJoinGame;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInOpenWindow;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInPlayerInventory;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInPlayerListItem;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInPlayerListItemRemove;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInPlayerLook;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInPlayerPosLook;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInSetCompressionLegacy;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInSetExperience;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInSetSlot;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInSpawnEntity;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInStartConfiguration;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInUpdateHealth;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInWindowClose;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketInWindowItems;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutAcknowledgeConfiguration;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutArmAnimation;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutBlockPlace;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutChatCommand;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutChatMessage;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutChatSessionUpdate;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutChunkBatchReceived;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutClickWindow;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutClientStatus;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutCloseInventory;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutConfirmTransaction;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutEntityAction;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutHeldItemChange;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutPlayerLoaded;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutPosLook;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutPosition;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutTeleportConfirm;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutUnsignedChatCommand;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutUseItem;
 import fabian.hartman.MinecraftAFKBot.network.utils.InvalidPacketException;
 
 import java.io.InputStreamReader;
@@ -182,40 +157,21 @@ public class PacketRegistry {
         } else if (state == ProtocolState.PLAY) {
             if (flow == ProtocolFlow.INCOMING_PACKET) {
                 switch (mojangPacketId) {
-                    case "minecraft:add_entity": return PacketInSpawnEntity.class;
-                    case "minecraft:change_difficulty": return PacketInDifficultySet.class;
                     case "minecraft:commands": return PacketInCommands.class;
-                    case "minecraft:container_close": return PacketInWindowClose.class;
-                    case "minecraft:container_set_content": return PacketInWindowItems.class;
-                    case "minecraft:container_set_slot": return PacketInSetSlot.class;
                     case "minecraft:disconnect": return PacketInDisconnect.class;
                     case "minecraft:keep_alive": return PacketInKeepAlive.class;
                     case "minecraft:login": return PacketInJoinGame.class;
-                    case "minecraft:move_entity_pos": return PacketInEntityPosition.class;
-                    case "minecraft:move_entity_pos_rot": return PacketInEntityPositionRotation.class;
-                    case "minecraft:open_screen": return PacketInOpenWindow.class;
                     case "minecraft:player_chat": return PacketInChatPlayer.class;
-                    case "minecraft:player_info_remove": return PacketInPlayerListItemRemove.class;
-                    case "minecraft:player_info_update": return PacketInPlayerListItem.class;
-                    case "minecraft:player_position": return PacketInPlayerPosLook.class;
-                    case "minecraft:player_rotation": return PacketInPlayerLook.class;
                     case "minecraft:resource_pack_push": return PacketInResourcePack.class;
                     case "minecraft:set_held_slot":
-                    case "minecraft:set_carried_item": return PacketInHeldItemChange.class;
-                    case "minecraft:set_entity_data": return PacketInEntityMetadata.class;
                     case "minecraft:set_entity_motion": return PacketInEntityVelocity.class;
-                    case "minecraft:set_experience": return PacketInSetExperience.class;
                     case "minecraft:set_health": return PacketInUpdateHealth.class;
                     case "minecraft:start_configuration": return PacketInStartConfiguration.class;
                     case "minecraft:system_chat": return PacketInChatSystem.class;
                     case "minecraft:teleport_entity": return PacketInEntityTeleport.class;
-                    case "minecraft:remove_entities": return PacketInDestroyEntities.class;
                     case "minecraft:confirm_transaction": return PacketInConfirmTransaction.class;
                     case "minecraft:play_compression": return PacketInSetCompressionLegacy.class;
                     case "minecraft:ping": return PacketInPing.class;
-                    case "minecraft:set_player_inventory": return PacketInPlayerInventory.class;
-                    case "minecraft:entity_position_sync": return PacketInEntityPositionSync.class;
-                    case "minecraft:chunk_batch_finished": return PacketInChunkBatchFinished.class;
                 }
             } else if (flow == ProtocolFlow.OUTGOING_PACKET) {
                 switch (mojangPacketId) {
@@ -227,17 +183,11 @@ public class PacketRegistry {
                     case "minecraft:client_command": return PacketOutClientStatus.class;
                     case "minecraft:client_information": return PacketOutClientSettings.class;
                     case "minecraft:configuration_acknowledged": return PacketOutAcknowledgeConfiguration.class;
-                    case "minecraft:container_click": return PacketOutClickWindow.class;
-                    case "minecraft:container_close": return PacketOutCloseInventory.class;
                     case "minecraft:custom_payload": return PacketOutPluginMessage.class;
                     case "minecraft:keep_alive": return PacketOutKeepAlive.class;
                     case "minecraft:move_player_pos": return PacketOutPosition.class;
-                    case "minecraft:move_player_pos_rot": return PacketOutPosLook.class;
                     case "minecraft:player_command": return PacketOutEntityAction.class;
                     case "minecraft:resource_pack": return PacketOutResourcePackResponse.class;
-                    case "minecraft:set_carried_item": return PacketOutHeldItemChange.class;
-                    case "minecraft:use_item_on": return PacketOutBlockPlace.class;
-                    case "minecraft:use_item": return PacketOutUseItem.class;
                     case "minecraft:swing": return PacketOutArmAnimation.class;
                     case "minecraft:confirm_transaction": return PacketOutConfirmTransaction.class;
                     case "minecraft:pong": return PacketOutPing.class;

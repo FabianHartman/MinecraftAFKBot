@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataOutput;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
-import fabian.hartman.MinecraftAFKBot.event.play.EntityVelocityEvent;
 import fabian.hartman.MinecraftAFKBot.network.protocol.NetworkHandler;
 import fabian.hartman.MinecraftAFKBot.network.protocol.Packet;
 import fabian.hartman.MinecraftAFKBot.network.utils.ByteArrayDataInputWrapper;
@@ -28,7 +27,5 @@ public class PacketInEntityVelocity extends Packet {
         x = in.readShort();
         y = in.readShort();
         z = in.readShort();
-
-        MinecraftAFKBot.getInstance().getCurrentBot().getEventManager().callEvent(new EntityVelocityEvent(x, y, z, eid));
     }
 }

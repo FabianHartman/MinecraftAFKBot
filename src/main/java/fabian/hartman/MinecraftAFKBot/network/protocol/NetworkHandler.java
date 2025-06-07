@@ -5,8 +5,6 @@ import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.Setter;
 import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
-import fabian.hartman.MinecraftAFKBot.network.entity.EntityDataParser;
-import fabian.hartman.MinecraftAFKBot.network.item.datacomponent.DataComponentRegistry;
 import fabian.hartman.MinecraftAFKBot.network.utils.ByteArrayDataInputWrapper;
 import fabian.hartman.MinecraftAFKBot.network.utils.CryptManager;
 
@@ -19,9 +17,6 @@ import java.util.zip.Inflater;
 
 @Getter
 public class NetworkHandler {
-    private DataComponentRegistry dataComponentRegistry;
-    private EntityDataParser entityDataParser;
-
     private DataOutputStream out;
     private DataInputStream in;
 
@@ -45,9 +40,6 @@ public class NetworkHandler {
             this.in = new DataInputStream(MinecraftAFKBot.getInstance().getCurrentBot().getSocket().getInputStream());
 
             this.state = ProtocolState.HANDSHAKE;
-            if (MinecraftAFKBot.getInstance().getCurrentBot().getServerProtocol() >= ProtocolConstants.MC_1_20_5)
-                this.dataComponentRegistry = new DataComponentRegistry();
-            this.entityDataParser = new EntityDataParser();
             initPacketRegistries();
         } catch (IOException e) {
             e.printStackTrace();

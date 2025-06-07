@@ -1,8 +1,3 @@
-/*
- * Created by David Luedtke (MrKinau)
- * 2019/5/5
- */
-
 package fabian.hartman.MinecraftAFKBot.network.protocol;
 
 import com.google.common.base.Charsets;
@@ -10,37 +5,21 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
-import fabian.hartman.MinecraftAFKBot.bot.MovingObjectPositionBlock;
-import fabian.hartman.MinecraftAFKBot.bot.Slot;
-import fabian.hartman.MinecraftAFKBot.bot.registry.Registries;
-import fabian.hartman.MinecraftAFKBot.network.item.ComponentItemData;
-import fabian.hartman.MinecraftAFKBot.network.item.NBTItemData;
-import fabian.hartman.MinecraftAFKBot.network.item.datacomponent.DataComponent;
-import fabian.hartman.MinecraftAFKBot.network.item.datacomponent.DataComponentRegistry;
-import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutBlockPlace;
 import fabian.hartman.MinecraftAFKBot.network.utils.ByteArrayDataInputWrapper;
 import fabian.hartman.MinecraftAFKBot.network.utils.InvalidPacketException;
 import fabian.hartman.MinecraftAFKBot.network.utils.OverflowPacketException;
 import fabian.hartman.MinecraftAFKBot.utils.ChatComponentUtils;
-import fabian.hartman.MinecraftAFKBot.utils.nbt.CompoundTag;
-import fabian.hartman.MinecraftAFKBot.utils.nbt.IntTag;
 import fabian.hartman.MinecraftAFKBot.utils.nbt.NBTTag;
 import fabian.hartman.MinecraftAFKBot.utils.nbt.StringTag;
-import fabian.hartman.MinecraftAFKBot.utils.nbt.Tag;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public abstract class Packet {
-
     private static final JsonParser PARSER = new JsonParser();
 
     public abstract void write(ByteArrayDataOutput out, int protocolId) throws IOException;
@@ -234,156 +213,6 @@ public abstract class Packet {
             // Ignored
         }
         return ChatComponentUtils.toPlainText(chatComponent);
-    }
-
-    public static void writeSlot(Slot slot, ByteArrayDataOutput output, int protocolId) {
-        if (protocolId >= ProtocolConstants.MC_1_20_5) {
-            if (!slot.isPresent()) {
-                writeVarInt(0, output);
-                return;
-            }
-            writeVarInt(slot.getItemCount(), output);
-            if (slot.getItemCount() <= 0) return;
-            writeVarInt(slot.getItemId(), output);
-            slot.writeItemData(output, protocolId);
-        } else if (protocolId >= ProtocolConstants.MC_1_13_2) {
-            output.writeBoolean(slot.isPresent());
-            if (slot.isPresent()) {
-                writeVarInt(slot.getItemId(), output);
-                output.writeByte(slot.getItemCount());
-                slot.writeItemData(output, protocolId);
-            }
-        } else if (protocolId >= ProtocolConstants.MC_1_13) {
-            if (!slot.isPresent()) {
-                output.writeShort(-1);
-                return;
-            }
-            output.writeShort(slot.getItemId());
-            output.writeByte(slot.getItemCount());
-            slot.writeItemData(output, protocolId);
-        } else {
-            if (!slot.isPresent()) {
-                output.writeShort(-1);
-                return;
-            }
-            output.writeShort(slot.getItemId());
-            output.writeByte(slot.getItemCount());
-            output.writeShort(slot.getItemDamage());
-            slot.writeItemData(output, protocolId);
-        }
-    }
-
-    public static Slot readSlot(ByteArrayDataInputWrapper input, int protocolId, DataComponentRegistry dataComponentRegistry) {
-        if (protocolId >= ProtocolConstants.MC_1_20_5) {
-            int count = readVarInt(input);
-            if (count <= 0) return Slot.EMPTY;
-
-            int itemId = readVarInt(input);
-
-            int presentObjectCount = readVarInt(input);
-            int emptyObjectCount = readVarInt(input);
-
-            if (presentObjectCount == 0 && emptyObjectCount == 0) {
-                Slot slot = new Slot(true, itemId, (byte) count, -1, null);
-                if (MinecraftAFKBot.getInstance().getConfig().isLogItemData())
-                    MinecraftAFKBot.getLog().info("Read slot: " + slot.getItemCount() + "x " + Registries.ITEM.getItemName(slot.getItemId(), protocolId));
-                return slot;
-            }
-
-            List<DataComponent> presentComponents = new LinkedList<>();
-            List<DataComponent> emptyComponents = new LinkedList<>();
-
-            for (int i = 0; i < presentObjectCount; i++) {
-                int dataComponentType = readVarInt(input);
-                DataComponent dataComponent = dataComponentRegistry.createComponent(dataComponentType, protocolId);
-                if (dataComponent != null) {
-                    dataComponent.read(input, protocolId);
-                    presentComponents.add(dataComponent);
-                } else {
-                    MinecraftAFKBot.getLog().severe("Invalid component: " + dataComponentType);
-                }
-            }
-
-            for (int i = 0; i < emptyObjectCount; i++) {
-                int dataComponentType = readVarInt(input);
-                DataComponent dataComponent = dataComponentRegistry.createComponent(dataComponentType, protocolId);
-                if (dataComponent != null) {
-                    emptyComponents.add(dataComponent);
-                }
-            }
-
-            Slot slot = new Slot(true, itemId, (byte) count, -1, new ComponentItemData(presentComponents, emptyComponents));
-            if (MinecraftAFKBot.getInstance().getConfig().isLogItemData()) {
-                MinecraftAFKBot.getLog().info("Read slot: " + slot.getItemCount() + "x " + Registries.ITEM.getItemName(slot.getItemId(), protocolId));
-                for (DataComponent presentComponent : presentComponents) {
-                    MinecraftAFKBot.getLog().info("» + " + presentComponent.toString(protocolId));
-                }
-                for (DataComponent emptyComponent : emptyComponents) {
-                    MinecraftAFKBot.getLog().info("» - " + emptyComponent.toString(protocolId));
-                }
-            }
-            return slot;
-        } else if (protocolId >= ProtocolConstants.MC_1_13_2) {
-            boolean present = input.readBoolean();
-            if (present) {
-                int itemId = readVarInt(input);
-                byte itemCount = input.readByte();
-                NBTTag tag = readNBT(input, protocolId);
-                int damage = -1;
-                if (tag.getTag() instanceof CompoundTag) {
-                    damage = Optional.ofNullable(((CompoundTag)tag.getTag()).get("Damage", IntTag.class))
-                            .map(Tag::getValue)
-                            .orElse(-1);
-                }
-                return new Slot(true, itemId, itemCount, damage, new NBTItemData(tag));
-            } else
-                return Slot.EMPTY;
-        } else if (protocolId >= ProtocolConstants.MC_1_13) {
-            int itemId = input.readShort();
-            if (itemId == -1)
-                return Slot.EMPTY;
-            byte itemCount = input.readByte();
-            NBTTag tag = readNBT(input, protocolId);
-            int damage = -1;
-            if (tag.getTag() instanceof CompoundTag) {
-                damage = Optional.ofNullable(((CompoundTag)tag.getTag()).get("Damage", IntTag.class))
-                        .map(Tag::getValue)
-                        .orElse(-1);
-            }
-            return new Slot(true, itemId, itemCount, damage, new NBTItemData(tag));
-        } else {
-            int itemId = input.readShort();
-            if (itemId == -1)
-                return Slot.EMPTY;
-            byte itemCount = input.readByte();
-            short itemDamage = input.readShort();
-            NBTTag tag = readNBT(input, protocolId);
-            return new Slot(true, itemId, itemCount, itemDamage, new NBTItemData(tag));
-        }
-    }
-
-    public static void writeSlotHash(Slot slot, ByteArrayDataOutput output, int protocolId) {
-        if (protocolId < ProtocolConstants.MC_1_21_5) return; // should not happen
-        if (slot == null || slot == Slot.EMPTY || !slot.isPresent()) {
-            output.writeBoolean(false);
-            return;
-        }
-        output.writeBoolean(true);
-        writeVarInt(slot.getItemId(), output);
-        writeVarInt(slot.getItemCount(), output);
-        slot.writeHashedItemData(output, protocolId);
-    }
-
-    public static void writeMovingObjectPosition(MovingObjectPositionBlock movingObjectPositionBlock, ByteArrayDataOutput output, int protocolId) {
-        output.writeLong(movingObjectPositionBlock.getBlockPos());
-        PacketOutBlockPlace.BlockFace blockFace = movingObjectPositionBlock.getDirection();
-        writeVarInt(blockFace == PacketOutBlockPlace.BlockFace.UNSET ? 255 : blockFace.ordinal(), output);
-        output.writeFloat(movingObjectPositionBlock.getDx());
-        output.writeFloat(movingObjectPositionBlock.getDy());
-        output.writeFloat(movingObjectPositionBlock.getDz());
-        output.writeBoolean(movingObjectPositionBlock.isInside());
-        if (protocolId >= ProtocolConstants.MC_1_21_2)
-            output.writeBoolean(movingObjectPositionBlock.isWorldBorderHit());
     }
 
     public static <E extends Enum<E>> EnumSet<E> readEnumSet(Class<E> type, ByteArrayDataInput input) {

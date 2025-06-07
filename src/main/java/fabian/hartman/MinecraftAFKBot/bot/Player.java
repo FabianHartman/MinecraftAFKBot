@@ -1,8 +1,3 @@
-/*
- * Created by David Luedtke (MrKinau)
- * 2019/10/18
- */
-
 package fabian.hartman.MinecraftAFKBot.bot;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -28,7 +23,6 @@ import fabian.hartman.MinecraftAFKBot.network.utils.CryptManager;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Getter
@@ -50,10 +44,7 @@ public class Player implements Listener {
     private boolean sneaking;
 
     private int heldSlot;
-    private Slot heldItem;
-    private Inventory inventory;
     @Setter(AccessLevel.NONE)
-    private final Map<Integer, Inventory> openedInventories = new HashMap<>();
     private Optional<CryptManager.MessageSignature> lastUsedSignature = Optional.empty();
     private int chatSessionIndex = 0;
     private CommandDispatcher<CommandExecutor> mcCommandDispatcher;
@@ -61,12 +52,10 @@ public class Player implements Listener {
     private UUID uuid;
 
     private int entityID = -1;
-    private int lastPing = 500;
 
     private Thread lookThread;
 
     public Player() {
-        this.inventory = new Inventory();
         MinecraftAFKBot.getInstance().getCurrentBot().getEventManager().registerListener(this);
     }
 
@@ -121,11 +110,6 @@ public class Player implements Listener {
                 }
             }
         }).start();
-    }
-
-    @EventHandler
-    public void onPingUpdate(PingChangeEvent event) {
-        setLastPing(event.getPing());
     }
 
     @EventHandler
@@ -186,152 +170,6 @@ public class Player implements Listener {
                 .map(entry -> new CryptManager.SignableArgument(entry.getKey(), entry.getValue().getValue().getResult().toString()))
                 .collect(Collectors.toList());
         MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutChatCommand(command, signableArguments));
-    }
-
-    public void dropStack(short slot, short actionNumber) {
-        Map<Short, Slot> remainingSlots = new HashMap<>();
-        remainingSlots.put(slot, Slot.EMPTY);
-        MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(
-                new PacketOutClickWindow(
-                        /* player inventory */ 0,
-                        slot,
-                        /* drop entire stack */ (byte) 1,
-                        /* action count starting at 1 */ actionNumber,
-                        /* drop entire stack */ 4,
-                        /* empty slot */ Slot.EMPTY,
-                        remainingSlots
-                )
-        );
-
-        MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().setItem(slot, Slot.EMPTY);
-    }
-
-    public void swapToHotBar(int slotId, int hotBarButton) {
-        // This is not notchian behaviour, but it works
-        Map<Short, Slot> remainingSlots = new HashMap<>();
-        remainingSlots.put((short) slotId, Slot.EMPTY);
-        MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(
-                new PacketOutClickWindow(
-                        /* player inventory */ 0,
-                        /* the clicked slot */ (short) slotId,
-                        /* use hotBar Button */ (byte) hotBarButton,
-                        /* action count starting at 1 */ (short) 1,
-                        /* hotBar button mode */ 2,
-                        /* slot */ getInventory().getContent().get(slotId),
-                        remainingSlots
-                )
-        );
-        try { Thread.sleep(20); } catch (InterruptedException ignore) { }
-        closeInventory();
-
-        if (MinecraftAFKBot.getInstance().getCurrentBot().getServerProtocol() <= ProtocolConstants.MC_1_17) {
-            Slot slot = MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().getContent().get(slotId);
-            MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().getContent().put(slotId, MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().getContent().get(hotBarButton + 36));
-            MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().getContent().put(hotBarButton + 36, slot);
-        }
-    }
-
-    public void shiftToInventory(int slotId, Inventory inventory) {
-        // This is not notchian behaviour, but it works
-        Map<Short, Slot> remainingSlots = new HashMap<>();
-        remainingSlots.put((short) slotId, Slot.EMPTY);
-        MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(
-                new PacketOutClickWindow(
-                        /* player inventory */ inventory.getWindowId(),
-                        /* the clicked slot */ (short) (slotId + (inventory.getContent().size() - 45)),
-                        /* use right click */ (byte) 0,
-                        /* action count starting at 1 */ inventory.getActionCounter(),
-                        /* shift click mode */ 1,
-                        /* slot */ getInventory().getContent().get(slotId),
-                        remainingSlots
-                )
-        );
-        try { Thread.sleep(20); } catch (InterruptedException ignore) { }
-
-        MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().getContent().put(slotId, Slot.EMPTY);
-    }
-
-    public boolean look(float yaw, float pitch, int speed, Consumer<Boolean> onFinish) {
-        if (lookThread != null && Thread.currentThread().getId() != lookThread.getId() && lookThread.isAlive()) {
-            return false;
-        } else if (lookThread != null && Thread.currentThread().getId() == lookThread.getId() && lookThread.isAlive()) {
-            internalLook(yaw, pitch, speed, onFinish); // calling look inside onFinish
-            return true;
-        }
-
-        this.lookThread = new Thread(() -> {
-            internalLook(yaw, pitch, speed, onFinish);
-        });
-        getLookThread().start();
-        return true;
-    }
-
-    private void internalLook(float yaw, float pitch, int speed, Consumer<Boolean> onFinish) {
-        float yawDiff = LocationUtils.yawDiff(getYaw(), yaw);
-        float pitchDiff = LocationUtils.yawDiff(getPitch(), pitch);
-
-        int steps = (int) Math.ceil(Math.max(Math.abs(yawDiff), Math.abs(pitchDiff)) / Math.max(1, speed));
-        float yawPerStep = yawDiff / steps;
-        float pitchPerStep = pitchDiff / steps;
-
-        for (int i = 0; i < steps; i++) {
-            setYaw(getYaw() + yawPerStep);
-            setPitch(getPitch() + pitchPerStep);
-            if (getYaw() > 180)
-                setYaw(-180 + (getYaw() - 180));
-            if (getYaw() < -180)
-                setYaw(180 + (getYaw() + 180));
-            MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutPosLook(getX(), getY(), getZ(), getYaw(), getPitch(), true, true));
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException ignore) { }
-        }
-        if (onFinish != null)
-            onFinish.accept(true);
-
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException ignore) { }
-    }
-
-    public void openAdjacentChest(LocationUtils.Direction direction) {
-        int x = (int)Math.floor(getX());
-        int y = (int)Math.round(getY());
-        int z = (int)Math.floor(getZ());
-        PacketOutBlockPlace.BlockFace blockFace;
-        switch (direction) {
-            case EAST: x++; blockFace = PacketOutBlockPlace.BlockFace.WEST; break;
-            case WEST: x--; blockFace = PacketOutBlockPlace.BlockFace.EAST; break;
-            case NORTH: z--; blockFace = PacketOutBlockPlace.BlockFace.SOUTH; break;
-            case DOWN: y--; blockFace = PacketOutBlockPlace.BlockFace.TOP; break;
-            default: z++; blockFace = PacketOutBlockPlace.BlockFace.NORTH; break;
-        }
-        if (MinecraftAFKBot.getInstance().getCurrentBot().getServerProtocol() == ProtocolConstants.MC_1_8) {
-            MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutUseItem(
-                    x, y, z, (byte)0, (byte)0, (byte)0, 0F, 0F, blockFace
-            ));
-        } else {
-            boolean autoSneak = MinecraftAFKBot.getInstance().getCurrentBot().getConfig().isAutoSneak();
-            if (autoSneak)
-                MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutEntityAction(EntityAction.STOP_SNEAKING));
-            MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutBlockPlace(
-                    PacketOutBlockPlace.Hand.MAIN_HAND,
-                    x, y, z, blockFace,
-                    0.5F, 0.5F, 0.5F,
-                    false,
-                    false
-            ));
-            if (autoSneak)
-                MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutEntityAction(EntityAction.START_SNEAKING));
-        }
-    }
-
-    public void closeInventory() {
-        closeInventory(0);
-    }
-
-    public void closeInventory(int windowId) {
-        MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutCloseInventory(windowId));
     }
 
     public void use() {

@@ -8,8 +8,6 @@ import lombok.ToString;
 @ToString
 @Getter
 public class AccessTokenCallback {
-
     private final String accessToken;
     private final String refreshToken;
-
 }
