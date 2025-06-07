@@ -20,11 +20,6 @@ public class StubArgumentType implements ArgumentType<Object> {
         };
     }
 
-    public StubArgumentType(int id, Consumer<StringReader> reader) {
-        this.id = id;
-        this.reader = reader;
-    }
-
     @Override
     public Object parse(StringReader reader) throws CommandSyntaxException {
         this.reader.accept(reader);

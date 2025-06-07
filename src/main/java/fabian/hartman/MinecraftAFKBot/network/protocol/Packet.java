@@ -166,15 +166,6 @@ public abstract class Packet {
         return result;
     }
 
-    public static void writeVarLong(long value, ByteArrayDataOutput output) {
-        while ((value & -128L) != 0L) {
-            output.writeByte((int) (value & 127L) | 128);
-            value >>>= 7;
-        }
-
-        output.writeByte((int) value);
-    }
-
     public static long readVarLong(ByteArrayDataInput input) {
         long i = 0L;
         int j = 0;
@@ -381,19 +372,6 @@ public abstract class Packet {
         writeVarInt(slot.getItemId(), output);
         writeVarInt(slot.getItemCount(), output);
         slot.writeHashedItemData(output, protocolId);
-    }
-
-    public static MovingObjectPositionBlock readMovingObjectPosition(ByteArrayDataInputWrapper input, int protocolId) {
-        long blockPos = input.readLong();
-        PacketOutBlockPlace.BlockFace blockFace = PacketOutBlockPlace.BlockFace.byOrdinal(readVarInt(input));
-        float dx = input.readFloat();
-        float dy = input.readFloat();
-        float dz = input.readFloat();
-        boolean inside = input.readBoolean();
-        boolean worldBorderHit = false;
-        if (protocolId >= ProtocolConstants.MC_1_21_2)
-            worldBorderHit = input.readBoolean();
-        return new MovingObjectPositionBlock(blockPos, blockFace, dx, dy, dz, inside, worldBorderHit);
     }
 
     public static void writeMovingObjectPosition(MovingObjectPositionBlock movingObjectPositionBlock, ByteArrayDataOutput output, int protocolId) {

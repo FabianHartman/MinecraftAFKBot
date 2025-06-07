@@ -1,9 +1,6 @@
 package fabian.hartman.MinecraftAFKBot.utils;
 
 import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
-import fabian.hartman.MinecraftAFKBot.bot.Enchantment;
-import fabian.hartman.MinecraftAFKBot.bot.Inventory;
-import fabian.hartman.MinecraftAFKBot.bot.Item;
 import fabian.hartman.MinecraftAFKBot.bot.Slot;
 import fabian.hartman.MinecraftAFKBot.bot.registry.Registries;
 import fabian.hartman.MinecraftAFKBot.bot.registry.Registry;
@@ -11,12 +8,9 @@ import fabian.hartman.MinecraftAFKBot.bot.registry.legacy.LegacyMaterial;
 import fabian.hartman.MinecraftAFKBot.network.protocol.ProtocolConstants;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ItemUtils {
     private static final Map<Integer, Integer> rodId = new HashMap<>();
-    private static final Map<Integer, Set<Integer>> fishIds = new HashMap<>();
-    private static final Map<Integer, Integer> enchantedBookId = new HashMap<>();
 
     public static int getRodId(int protocolId) {
         if (rodId.containsKey(protocolId))
@@ -46,82 +40,6 @@ public class ItemUtils {
             return getRodId(protocol) == slot.getItemId();
     }
 
-    public static boolean isFish(int protocol, int itemId) {
-        if (protocol < ProtocolConstants.MC_1_13)
-            return itemId == LegacyMaterial.RAW_FISH.getId();
-        if (fishIds.containsKey(protocol))
-            return fishIds.get(protocol).contains(itemId);
-        Set<Integer> ids = new HashSet<>();
-        Registry<Integer, String> registry = Registries.ITEM.getRegistry(protocol);
-        ids.add(registry.findKey("minecraft:cod"));
-        ids.add(registry.findKey("minecraft:salmon"));
-        ids.add(registry.findKey("minecraft:tropical_fish"));
-        ids.add(registry.findKey("minecraft:pufferfish"));
-        fishIds.put(protocol, ids);
-        return ids.contains(itemId);
-    }
-
-    public static boolean isEnchantedBook(int protocol, int itemId) {
-        if (protocol < ProtocolConstants.MC_1_13)
-            return itemId == LegacyMaterial.ENCHANTED_BOOK.getId();
-        if (enchantedBookId.containsKey(protocol))
-            return enchantedBookId.get(protocol) == itemId;
-        int ebId = Registries.ITEM.findKey("minecraft:enchanted_book", protocol);
-        enchantedBookId.put(protocol, ebId);
-        return ebId == itemId;
-    }
-
-    public static List<Enchantment> getEnchantments(Slot slot) {
-        List<Enchantment> enchantmentList = new ArrayList<>();
-        if (slot.getItemData() == null) return enchantmentList;
-        return slot.getItemData().getEnchantments();
-    }
-
-    public static int getDamage(Slot slot) {
-        if (slot == null)
-            return -1;
-        return slot.getItemDamage();
-    }
-
-    public static int getFishingRodValue(Slot slot) {
-        if (!isFishingRod(slot))
-            return -100;
-        if (MinecraftAFKBot.getInstance().getCurrentBot().getConfig().isPreventRodBreaking() && ItemUtils.getDamage(slot) >= 63)
-            return -100;
-        List<Enchantment> enchantments = getEnchantments(slot);
-        int luckOfTheSeaLevel = enchantments.stream()
-                .filter(enchantment -> enchantment.getEnchantmentType().equals("minecraft:luck_of_the_sea"))
-                .map(Enchantment::getLevel).findAny().orElse(0);
-        int lureLevel = enchantments.stream()
-                .filter(enchantment -> enchantment.getEnchantmentType().equals("minecraft:lure"))
-                .map(Enchantment::getLevel).findAny().orElse(0);
-        int unbreakingLevel = enchantments.stream()
-                .filter(enchantment -> enchantment.getEnchantmentType().equals("minecraft:unbreaking"))
-                .map(Enchantment::getLevel).findAny().orElse(0);
-        int mendingLevel = enchantments.stream()
-                .filter(enchantment -> enchantment.getEnchantmentType().equals("minecraft:mending"))
-                .map(Enchantment::getLevel).findAny().orElse(0);
-        int vanishingCurseLevel = enchantments.stream()
-                .filter(enchantment -> enchantment.getEnchantmentType().equals("minecraft:vanishing_curse"))
-                .map(Enchantment::getLevel).findAny().orElse(0);
-        return luckOfTheSeaLevel * 9 + lureLevel * 9 + unbreakingLevel * 2 + mendingLevel - vanishingCurseLevel;
-    }
-
-    public static int getBestFishingRod(Inventory inventory) {
-        AtomicInteger currentBestSlotId = new AtomicInteger(-1);
-        AtomicInteger currentBestValue = new AtomicInteger(-100);
-        if (inventory == null)
-            return -1;
-        inventory.getContent().forEach((slotId, slot) -> {
-            int currValue = getFishingRodValue(slot);
-            if (currValue > currentBestValue.get()) {
-                currentBestValue.set(currValue);
-                currentBestSlotId.set(slotId);
-            }
-        });
-        return currentBestSlotId.get();
-    }
-
     public static String getItemName(Slot slot) {
         if (MinecraftAFKBot.getInstance().getCurrentBot() == null || !slot.isPresent())
             return "N/A";
@@ -131,15 +49,5 @@ public class ItemUtils {
         } else {
             return Registries.ITEM.getItemName(slot.getItemId(), version).replace("minecraft:", "");
         }
-    }
-
-    public static String getImageURL(Item item) {
-        String fileType = (item.getEnchantments() == null || item.getEnchantments().isEmpty()) ? "png" : "gif";
-        String itemName;
-        if (item.getName() != null)
-            itemName = item.getName().toLowerCase();
-        else
-            itemName = "air";
-        return String.format("https://raw.githubusercontent.com/MrKinau/FishingBot/master/src/main/resources/img/items/%s." + fileType, itemName).replace(" ", "%20");
     }
 }

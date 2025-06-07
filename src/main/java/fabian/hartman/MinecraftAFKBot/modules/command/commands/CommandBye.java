@@ -15,7 +15,7 @@ public class CommandBye extends BrigardierCommand {
         builder.executes(context -> {
             CommandExecutor source = context.getSource();
 
-            source.sendTranslatedMessages("command-bye");
+            source.sendMessage("Stops the bot");
 
             MinecraftAFKBot.getInstance().getCurrentBot().setPreventReconnect(true);
             MinecraftAFKBot.getInstance().getCurrentBot().setRunning(false);

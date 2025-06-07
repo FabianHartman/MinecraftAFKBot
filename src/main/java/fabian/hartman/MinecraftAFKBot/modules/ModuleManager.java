@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModuleManager {
-
     @Getter private List<Module> loadedModules = new CopyOnWriteArrayList<>();
 
     public void disableAll() {
@@ -22,14 +21,6 @@ public class ModuleManager {
             return;
         getLoadedModules().add(module);
         module.enable();
-    }
-
-    public void disableModule(Class moduleClass) {
-        Optional<Module> loaded = getLoadedModule(moduleClass);
-        loaded.ifPresent(module -> {
-            module.disable();
-            getLoadedModules().remove(module);
-        });
     }
 
     public boolean isLoaded(Module module) {

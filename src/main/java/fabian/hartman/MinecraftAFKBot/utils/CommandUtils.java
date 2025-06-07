@@ -21,22 +21,4 @@ public class CommandUtils {
         } while ((context = context.getChild()) != null);
         return arguments;
     }
-
-    private static <T> void findUsedArgumentTypes(CommandNode<T> node, Set<com.mojang.brigadier.arguments.ArgumentType<?>> usedArgumentTypes, Set<CommandNode<T>> visitedNodes) {
-        if (visitedNodes.add(node)) {
-            if (node instanceof ArgumentCommandNode) {
-                ArgumentCommandNode<?, ?> argumentCommandNode = (ArgumentCommandNode)node;
-                usedArgumentTypes.add(argumentCommandNode.getType());
-            }
-
-            node.getChildren().forEach((child) -> {
-                findUsedArgumentTypes(child, usedArgumentTypes, visitedNodes);
-            });
-            CommandNode<T> commandNode = node.getRedirect();
-            if (commandNode != null) {
-                findUsedArgumentTypes(commandNode, usedArgumentTypes, visitedNodes);
-            }
-
-        }
-    }
 }

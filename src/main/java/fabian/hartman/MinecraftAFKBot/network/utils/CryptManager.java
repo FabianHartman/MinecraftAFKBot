@@ -36,8 +36,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CryptManager {
-    public static final Charset charSet = Charset.forName("ISO_8859_1");
-
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
@@ -46,18 +44,6 @@ public class CryptManager {
         CipherKeyGenerator var0 = new CipherKeyGenerator();
         var0.init(new KeyGenerationParameters(new SecureRandom(), 128));
         return new SecretKeySpec(var0.generateKey(), "AES");
-    }
-
-    public static KeyPair createNewKeyPair() {
-        try {
-            KeyPairGenerator var0 = KeyPairGenerator.getInstance("RSA");
-            var0.initialize(1024);
-            return var0.generateKeyPair();
-        } catch (NoSuchAlgorithmException var1) {
-            var1.printStackTrace();
-            System.err.println("Key pair generation failed!");
-            return null;
-        }
     }
 
     public static byte[] getServerIdHash(String par0Str, PublicKey par1PublicKey, SecretKey par2SecretKey) {
@@ -102,16 +88,8 @@ public class CryptManager {
         return null;
     }
 
-    public static SecretKey decryptSharedKey(PrivateKey par0PrivateKey, byte[] par1ArrayOfByte) {
-        return new SecretKeySpec(decryptData(par0PrivateKey, par1ArrayOfByte), "AES");
-    }
-
     public static byte[] encryptData(Key par0Key, byte[] par1ArrayOfByte) {
         return cipherOperation(1, par0Key, par1ArrayOfByte);
-    }
-
-    public static byte[] decryptData(Key par0Key, byte[] par1ArrayOfByte) {
-        return cipherOperation(2, par0Key, par1ArrayOfByte);
     }
 
     private static byte[] cipherOperation(int par0, Key par1Key, byte[] par2ArrayOfByte) {

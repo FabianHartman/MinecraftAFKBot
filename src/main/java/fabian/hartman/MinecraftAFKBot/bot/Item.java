@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
 
 import java.util.List;
 
@@ -26,17 +25,5 @@ public class Item {
     @Override
     public String toString() {
         return eid + ":" + name + " (" + motX + "/" + motY + "/" + motZ + ")";
-    }
-
-    public int getMaxMot() {
-        return getMaxMot(motX, motY, motZ);
-    }
-
-    public String getDisplayName() {
-        return MinecraftAFKBot.getInstance().getCurrentBot().getMinecraftTranslations().getItemName(getName());
-    }
-
-    public static int getMaxMot(int motX, int motY, int motZ) {
-        return Math.abs(motX) + Math.abs(motY) + Math.abs(motZ);
     }
 }

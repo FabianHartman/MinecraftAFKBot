@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import lombok.Getter;
-import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
 import fabian.hartman.MinecraftAFKBot.modules.command.executor.CommandExecutor;
 
 import java.text.MessageFormat;

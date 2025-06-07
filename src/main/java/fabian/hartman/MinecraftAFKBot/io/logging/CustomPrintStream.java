@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 public class CustomPrintStream extends PrintStream {
 
     private static final PrintStream originalSystemOut = System.out;
-    private static final PrintStream originalSystemErr = System.err;
     private static CustomPrintStream systemOutToLogger;
 
     private String packageOrClassToLog;
@@ -17,12 +16,6 @@ public class CustomPrintStream extends PrintStream {
         System.setOut(systemOutToLogger);
         System.setErr(systemOutToLogger);
         return systemOutToLogger;
-    }
-
-    public static void disable() {
-        System.setOut(originalSystemOut);
-        System.setErr(originalSystemErr);
-        systemOutToLogger = null;
     }
 
     private CustomPrintStream(PrintStream original, String packageOrClassToLog, Logger logger) {

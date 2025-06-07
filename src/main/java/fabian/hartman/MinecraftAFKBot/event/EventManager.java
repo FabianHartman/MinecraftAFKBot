@@ -77,8 +77,4 @@ public class EventManager {
             }
         });
     }
-
-    public boolean isRegistered(Listener listener) {
-        return classToInstanceMapping.containsKey(listener.getClass());
-    }
 }

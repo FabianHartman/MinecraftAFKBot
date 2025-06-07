@@ -12,10 +12,6 @@ public class UUIDUtils {
         return createOfflineUUID(playerName).toString();
     }
 
-    public static String withoutDashes(UUID uuid) {
-        return withoutDashes(uuid.toString());
-    }
-
     public static String withoutDashes(String uuid) {
         if (uuid == null) return null;
         return uuid.replace("-", "");

@@ -17,9 +17,4 @@ class DefaultMethodAccessor implements MethodAccessor {
             throw new RuntimeException(String.format("Error while invoking method '%s'", method), ex);
         }
     }
-
-    @Override
-    public Method getMethod() {
-        return method;
-    }
 }

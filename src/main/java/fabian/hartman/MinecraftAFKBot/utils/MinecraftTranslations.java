@@ -25,23 +25,4 @@ public class MinecraftTranslations {
             return null;
         return String.format(translations.get(key).getAsString(), args);
     }
-
-    public String getEnchantmentName(String id) {
-        String idWithoutNamespace = id.replace("minecraft:", "");
-        String translation = getTranslation("enchantment.minecraft." + idWithoutNamespace);
-        if (translation == null)
-            return idWithoutNamespace;
-        return translation;
-    }
-
-    public String getItemName(String id) {
-        String idWithoutNamespace = id == null ? "air" : id.replace("minecraft:", "");
-        String translation = getTranslation("item.minecraft." + idWithoutNamespace);
-        if (translation == null) {
-            translation = getTranslation("block.minecraft." + idWithoutNamespace);
-            if (translation == null)
-                return idWithoutNamespace;
-        }
-        return translation;
-    }
 }

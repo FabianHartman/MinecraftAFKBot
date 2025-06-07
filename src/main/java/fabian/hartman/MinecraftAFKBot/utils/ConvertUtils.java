@@ -2,7 +2,6 @@ package fabian.hartman.MinecraftAFKBot.utils;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
-import fabian.hartman.MinecraftAFKBot.modules.ejection.EjectionRule;
 import fabian.hartman.MinecraftAFKBot.modules.timer.Timer;
 
 import java.lang.reflect.ParameterizedType;
@@ -29,14 +28,6 @@ public class ConvertUtils {
             return Integer.valueOf(value);
         } else if(type.isAssignableFrom(long.class)) {
             return Long.valueOf(value);
-        } else if(type.isAssignableFrom(EjectionRule.EjectionType.class)) {
-            try {
-                return EjectionRule.EjectionType.valueOf(value);
-            } catch (IllegalArgumentException ex) {
-                System.out.println(MessageFormat.format("The AnnounceType {0} is invalid.", value));
-                ex.printStackTrace();
-                return EjectionRule.EjectionType.DROP;
-            }
         } else if(type.isAssignableFrom(LocationUtils.Direction.class)) {
             try {
                 return LocationUtils.Direction.valueOf(value);
@@ -44,13 +35,6 @@ public class ConvertUtils {
                 System.out.println(MessageFormat.format("The AnnounceType {0} is invalid.", value));
                 ex.printStackTrace();
                 return LocationUtils.Direction.SOUTH;
-            }
-        } else if (type.isAssignableFrom(List.class) && ((ParameterizedType)genericType).getActualTypeArguments()[0].equals(EjectionRule.class)) {
-            try {
-                return GSON.<List<EjectionRule>>fromJson(value, new TypeToken<List<EjectionRule>>(){}.getType());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return null;
             }
         } else if (type.isAssignableFrom(List.class) && ((ParameterizedType)genericType).getActualTypeArguments()[0].equals(Timer.class)) {
             try {

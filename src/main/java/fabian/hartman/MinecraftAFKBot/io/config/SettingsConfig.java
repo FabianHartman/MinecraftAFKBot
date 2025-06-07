@@ -3,12 +3,10 @@ package fabian.hartman.MinecraftAFKBot.io.config;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import fabian.hartman.MinecraftAFKBot.modules.ejection.EjectionRule;
 import fabian.hartman.MinecraftAFKBot.modules.timer.Timer;
 import fabian.hartman.MinecraftAFKBot.network.protocol.ProtocolConstants;
 import fabian.hartman.MinecraftAFKBot.utils.LocationUtils;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,10 +40,6 @@ public class SettingsConfig implements Config {
     @Property(key = "auto.auto-quit-before-death.enabled", description = "config-auto-auto-quit-before-death") private boolean autoQuitBeforeDeathEnabled = false;
     @Property(key = "auto.auto-quit-before-death.min-health-before-quit", description = "config-auto-auto-quit-before-death-min-health-before-quit") private float minHealthBeforeQuit = 6.0F;
     @Property(key = "auto.auto-eject.enabled", description = "config-auto-auto-eject") private boolean autoLootEjectionEnabled = false;
-    @Property(key = "auto.auto-eject.rules", description = "config-auto-auto-eject") private List<EjectionRule> autoLootEjectionRules = Arrays.asList(
-            new EjectionRule("fish", LocationUtils.Direction.WEST, Arrays.asList("cod", "salmon", "pufferfish", "tropical_fish"), EjectionRule.EjectionType.DROP),
-            new EjectionRule("treasure", LocationUtils.Direction.EAST, Arrays.asList("bow", "enchanted_book", "name_tag", "nautilus_shell", "saddle"), EjectionRule.EjectionType.DROP),
-            new EjectionRule("junk", LocationUtils.Direction.SOUTH, Arrays.asList("lily_pad", "bowl", "leather", "leather_boots", "rotten_flesh", "stick", "string", "potion", "bone", "ink_sac", "tripwire_hook", "bamboo"), EjectionRule.EjectionType.DROP));
 
     @Property(key = "auto.timer.enabled", description = "config-auto-timer") private boolean timerEnabled = false;
     @Property(key = "auto.timer.timers", description = "config-auto-timers") private List<Timer> timers = Collections.singletonList(new Timer("test", 5, TimeUnit.MINUTES, Collections.singletonList("Every five minutes")));
@@ -90,9 +84,5 @@ public class SettingsConfig implements Config {
             serverPort = Integer.parseInt(serverIP.split(":")[1]);
             serverIP = serverIP.split(":")[0];
         }
-    }
-
-    public void save() {
-        new PropertyProcessor().saveConfig(this, new File(path));
     }
 }

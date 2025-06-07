@@ -22,12 +22,6 @@ public class CompoundTag extends Tag<Map<String, ? extends Tag<?>>> {
         return getValue().containsKey(name);
     }
 
-    public <U extends Tag<?>> boolean containsKey(String name, Class<U> clazz) {
-        Tag<?> tag = getValue().get(name);
-        if (tag == null) return false;
-        return tag.getClass().isAssignableFrom(clazz);
-    }
-
     @Override
     protected CompoundTag read(ByteArrayDataInputWrapper in) {
         Map<String, Tag<?>> value = new HashMap<>();

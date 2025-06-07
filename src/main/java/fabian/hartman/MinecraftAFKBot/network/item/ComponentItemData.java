@@ -18,15 +18,6 @@ public class ComponentItemData implements ItemData {
     private final List<DataComponent> removedComponents;
 
     @Override
-    public List<Enchantment> getEnchantments() {
-        return presentComponents.stream()
-                .filter(dataComponent -> dataComponent instanceof EnchantmentsComponent)
-                .map(dataComponent -> (EnchantmentsComponent) dataComponent)
-                .flatMap(enchantmentsComponent -> enchantmentsComponent.getEnchantments().stream())
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public void write(ByteArrayDataOutput output, int protocolId) {
         Packet.writeVarInt(presentComponents.size(), output);
         Packet.writeVarInt(removedComponents.size(), output);
@@ -34,20 +25,6 @@ public class ComponentItemData implements ItemData {
             Packet.writeVarInt(presentComponent.getComponentTypeId(), output);
             presentComponent.write(output, protocolId);
         }
-        for (DataComponent emptyComponent : removedComponents) {
-            Packet.writeVarInt(emptyComponent.getComponentTypeId(), output);
-        }
-    }
-
-    @Override
-    public void writeHashes(ByteArrayDataOutput output, int protocolId) {
-        Packet.writeVarInt(presentComponents.size(), output);
-        for (DataComponent presentComponent : presentComponents) {
-            Packet.writeVarInt(presentComponent.getComponentTypeId(), output);
-            // write hash - I hope this is fine, I really don't want to calculate component hashes
-            output.writeInt(0);
-        }
-        Packet.writeVarInt(removedComponents.size(), output);
         for (DataComponent emptyComponent : removedComponents) {
             Packet.writeVarInt(emptyComponent.getComponentTypeId(), output);
         }

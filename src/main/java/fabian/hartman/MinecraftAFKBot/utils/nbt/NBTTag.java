@@ -17,24 +17,6 @@ public class NBTTag {
         readUncompressed(in, protocol);
     }
 
-    public NBTTag(GZIPInputStream gzipInputStream, int protocol) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            byte[] buffer = new byte[1024];
-
-            int len;
-            while ((len = gzipInputStream.read(buffer)) > 0) {
-                out.write(buffer, 0, len);
-            }
-        } finally {
-            gzipInputStream.close();
-            out.close();
-        }
-
-        ByteArrayDataInputWrapper data = new ByteArrayDataInputWrapper(out.toByteArray());
-        readUncompressed(data, protocol);
-    }
-
     private void readUncompressed(ByteArrayDataInputWrapper in, int protocol) {
         ByteArrayDataInputWrapper clone = in.clone();
         int startAvailable = in.getAvailable();

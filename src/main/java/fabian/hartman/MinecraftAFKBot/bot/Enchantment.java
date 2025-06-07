@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataOutput;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import fabian.hartman.MinecraftAFKBot.MinecraftAFKBot;
 import fabian.hartman.MinecraftAFKBot.bot.registry.Registries;
 import fabian.hartman.MinecraftAFKBot.network.item.datacomponent.DataComponentPart;
 import fabian.hartman.MinecraftAFKBot.network.protocol.Packet;
@@ -21,14 +20,6 @@ public class Enchantment implements DataComponentPart {
     public Enchantment(String enchantmentType, int level) {
         this.enchantmentType = enchantmentType;
         this.level = level;
-    }
-
-    public String getEnchantmentNameWithoutNamespace() {
-        return enchantmentType.replace("minecraft:", "");
-    }
-
-    public String getDisplayName() {
-        return MinecraftAFKBot.getInstance().getCurrentBot().getMinecraftTranslations().getEnchantmentName(enchantmentType);
     }
 
     @Override

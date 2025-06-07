@@ -7,7 +7,6 @@ import org.apache.commons.cli.CommandLine;
 import fabian.hartman.MinecraftAFKBot.auth.AuthData;
 import fabian.hartman.MinecraftAFKBot.auth.Authenticator;
 import fabian.hartman.MinecraftAFKBot.bot.Player;
-import fabian.hartman.MinecraftAFKBot.bot.loot.LootHistory;
 import fabian.hartman.MinecraftAFKBot.event.EventManager;
 import fabian.hartman.MinecraftAFKBot.io.config.SettingsConfig;
 import fabian.hartman.MinecraftAFKBot.io.logging.LogFormatter;
@@ -19,7 +18,6 @@ import fabian.hartman.MinecraftAFKBot.modules.ModuleManager;
 import fabian.hartman.MinecraftAFKBot.modules.command.ChatCommandModule;
 import fabian.hartman.MinecraftAFKBot.modules.command.CommandRegistry;
 import fabian.hartman.MinecraftAFKBot.modules.command.executor.CommandExecutor;
-import fabian.hartman.MinecraftAFKBot.modules.ejection.EjectionModule;
 import fabian.hartman.MinecraftAFKBot.modules.timer.TimerModule;
 import fabian.hartman.MinecraftAFKBot.network.mojangapi.MojangAPI;
 import fabian.hartman.MinecraftAFKBot.network.mojangapi.Realm;
@@ -189,10 +187,6 @@ public class Bot {
         }
     }
 
-    public EjectionModule getEjectModule() {
-        return (EjectionModule) getModuleManager().getLoadedModule(EjectionModule.class).orElse(null);
-    }
-
     public void start(CommandLine cmdLine) {
         if (isRunning() || isPreventStartup()) {
             MinecraftAFKBot.getInstance().setCurrentBot(null);
@@ -238,8 +232,6 @@ public class Bot {
         String serverName = getServerHost();
         int port = getServerPort();
 
-        LootHistory savedLootHistory = new LootHistory();
-
         do {
             try {
                 setRunning(true);
@@ -272,9 +264,6 @@ public class Bot {
 
                 if (getConfig().isStartTextEnabled())
                     getModuleManager().enableModule(new ChatCommandModule());
-
-                if (getConfig().isAutoLootEjectionEnabled())
-                    getModuleManager().enableModule(new EjectionModule());
 
                 if (getConfig().isTimerEnabled())
                     getModuleManager().enableModule(new TimerModule());

@@ -57,22 +57,14 @@ public class PacketOutBlockPlace extends Packet {
 
     public enum Hand {
         MAIN_HAND,
-        OFF_HAND
     }
 
     public enum BlockFace {
-        BOTTOM,
         TOP,
         NORTH,
         SOUTH,
         WEST,
         EAST,
         UNSET;
-
-        public static BlockFace byOrdinal(int ordinal) {
-            if (ordinal == 255)
-                return UNSET;
-            return BlockFace.values()[ordinal];
-        }
     }
 }

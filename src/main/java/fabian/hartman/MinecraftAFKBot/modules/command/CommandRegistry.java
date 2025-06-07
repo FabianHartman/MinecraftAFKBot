@@ -24,17 +24,6 @@ public class CommandRegistry {
 
     public void registerBotCommands() {
         registerCommand(new CommandBye());
-        registerCommand(new CommandClickInv());
-        registerCommand(new CommandDropRod());
-        registerCommand(new CommandEmpty());
-        registerCommand(new CommandHelp());
-        registerCommand(new CommandLevel());
-        registerCommand(new CommandLook());
-        registerCommand(new CommandRightClick());
-        registerCommand(new CommandStuck());
-        registerCommand(new CommandSummary());
-        registerCommand(new CommandSwap());
-        registerCommand(new CommandWait());
     }
 
     public void registerCommand(BrigardierCommand command) {

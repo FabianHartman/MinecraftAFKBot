@@ -71,81 +71,6 @@ public class Player implements Listener {
     }
 
     @EventHandler
-    public void onPosLookChange(PosLookChangeEvent event) {
-        this.x = event.getX();
-        this.y = event.getY();
-        this.z = event.getZ();
-        this.yaw = event.getYaw();
-        this.pitch = event.getPitch();
-        this.originYaw = yaw;
-        this.originPitch = pitch;
-        if (MinecraftAFKBot.getInstance().getCurrentBot().getServerProtocol() >= ProtocolConstants.MC_1_9)
-            MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutTeleportConfirm(event.getTeleportId()));
-    }
-
-    @EventHandler
-    public void onPosLookChange(LookChangeEvent event) {
-        this.yaw = event.getYaw();
-        this.pitch = event.getPitch();
-        this.originYaw = yaw;
-        this.originPitch = pitch;
-    }
-
-    @EventHandler
-    public void onSetHeldItem(SetHeldItemEvent event) {
-        this.heldSlot = event.getSlot();
-    }
-
-    @EventHandler
-    public void onUpdateSlot(UpdateSlotEvent event) {
-        if (event.getWindowId() != 0)
-            return;
-
-        Slot slot = event.getSlot();
-
-        if (getInventory() != null)
-            getInventory().setItem(event.getSlotId(), slot);
-
-        if (event.getSlotId() == getHeldSlot())
-            this.heldItem = slot;
-        if (MinecraftAFKBot.getInstance().getCurrentBot().getConfig().isAutoLootEjectionEnabled()
-                && !(event.getSlotId() == getHeldSlot() && ItemUtils.isFishingRod(slot)))
-            MinecraftAFKBot.getInstance().getCurrentBot().getEjectModule()
-                    .executeEjectionRules(MinecraftAFKBot.getInstance().getCurrentBot().getConfig().getAutoLootEjectionRules(), slot, event.getSlotId());
-    }
-
-    @EventHandler
-    public void onUpdateWindow(UpdateWindowItemsEvent event) {
-        if (event.getWindowId() == 0) {
-            for (int i = 0; i < event.getSlots().size(); i++) {
-                getInventory().setItem(i, event.getSlots().get(i));
-                if (i == getHeldSlot())
-                    this.heldItem = event.getSlots().get(i);
-                if (MinecraftAFKBot.getInstance().getCurrentBot().getConfig().isAutoLootEjectionEnabled()
-                        && !(i == getHeldSlot() && ItemUtils.isFishingRod(event.getSlots().get(i))))
-                    MinecraftAFKBot.getInstance().getCurrentBot().getEjectModule()
-                            .executeEjectionRules(MinecraftAFKBot.getInstance().getCurrentBot().getConfig().getAutoLootEjectionRules(), event.getSlots().get(i), (short) i);
-            }
-        } else if (event.getWindowId() > 0) {
-            Inventory inventory;
-            if (getOpenedInventories().containsKey(event.getWindowId()))
-                inventory = getOpenedInventories().get(event.getWindowId());
-            else {
-                inventory = new Inventory();
-                inventory.setWindowId(event.getWindowId());
-                getOpenedInventories().put(event.getWindowId(), inventory);
-            }
-            for (int i = 0; i < event.getSlots().size(); i++)
-                inventory.setItem(i, event.getSlots().get(i));
-        }
-    }
-
-    @EventHandler
-    public void onInventoryCloseEvent(InventoryCloseEvent event) {
-        getOpenedInventories().remove(event.getWindowId());
-    }
-
-    @EventHandler
     public void onJoinGame(JoinGameEvent event) {
         setEntityID(event.getEid());
         respawn();
@@ -326,16 +251,6 @@ public class Player implements Listener {
         MinecraftAFKBot.getInstance().getCurrentBot().getPlayer().getInventory().getContent().put(slotId, Slot.EMPTY);
     }
 
-    public boolean look(LocationUtils.Direction direction, Consumer<Boolean> onFinish) {
-        float yaw = direction.getYaw() == Float.MIN_VALUE ? getYaw() : direction.getYaw();
-        float pitch = direction.getPitch() == Float.MIN_VALUE ? getPitch() : direction.getPitch();
-        return look(yaw, pitch, MinecraftAFKBot.getInstance().getCurrentBot().getConfig().getLookSpeed(), onFinish);
-    }
-
-    public boolean look(float yaw, float pitch, int speed) {
-        return look(yaw, pitch, speed, null);
-    }
-
     public boolean look(float yaw, float pitch, int speed, Consumer<Boolean> onFinish) {
         if (lookThread != null && Thread.currentThread().getId() != lookThread.getId() && lookThread.isAlive()) {
             return false;
@@ -379,10 +294,6 @@ public class Player implements Listener {
         } catch (InterruptedException ignore) { }
     }
 
-    public boolean isCurrentlyLooking() {
-        return !(lookThread == null || lookThread.isInterrupted() || !lookThread.isAlive());
-    }
-
     public void openAdjacentChest(LocationUtils.Direction direction) {
         int x = (int)Math.floor(getX());
         int y = (int)Math.round(getY());
@@ -421,16 +332,6 @@ public class Player implements Listener {
 
     public void closeInventory(int windowId) {
         MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutCloseInventory(windowId));
-    }
-
-    public void setHeldSlot(int heldSlot) {
-        setHeldSlot(heldSlot, true);
-    }
-
-    public void setHeldSlot(int heldSlot, boolean sendPacket) {
-        if (sendPacket)
-            MinecraftAFKBot.getInstance().getCurrentBot().getNet().sendPacket(new PacketOutHeldItemChange(heldSlot));
-        this.heldSlot = heldSlot + 36;
     }
 
     public void use() {
