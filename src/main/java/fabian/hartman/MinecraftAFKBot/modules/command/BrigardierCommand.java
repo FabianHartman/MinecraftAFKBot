@@ -1,9 +1,6 @@
 package fabian.hartman.MinecraftAFKBot.modules.command;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import lombok.Getter;
 import fabian.hartman.MinecraftAFKBot.modules.command.executor.CommandExecutor;
 
@@ -26,19 +23,7 @@ public abstract class BrigardierCommand {
 
     public abstract void register(LiteralArgumentBuilder<CommandExecutor> builder);
 
-    public String getSyntax(CommandContext<CommandExecutor> context) {
-        return getSyntax(context.getInput().split(" ")[0]);
-    }
-
     public String getSyntax(String label) {
         return MessageFormat.format("/{0}", label);
-    }
-
-    protected <T> RequiredArgumentBuilder<CommandExecutor, T> argument(String name, ArgumentType<T> type) {
-        return RequiredArgumentBuilder.argument(name, type);
-    }
-
-    protected LiteralArgumentBuilder<CommandExecutor> literal(String name) {
-        return LiteralArgumentBuilder.literal(name);
     }
 }

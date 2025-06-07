@@ -10,11 +10,10 @@ import fabian.hartman.MinecraftAFKBot.modules.command.executor.CommandExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class CommandRegistry {
-    @Getter private CommandDispatcher<CommandExecutor> commandDispatcher;
-    @Getter private List<BrigardierCommand> commands;
+    @Getter private final CommandDispatcher<CommandExecutor> commandDispatcher;
+    @Getter private final List<BrigardierCommand> commands;
 
     public CommandRegistry() {
         RootCommandNode<CommandExecutor> rootNode = new RootCommandNode<>();
@@ -48,9 +47,5 @@ public class CommandRegistry {
                 return true;
         } catch (CommandSyntaxException ignore) {}
         return false;
-    }
-
-    public Optional<BrigardierCommand> getCommand(String command) {
-        return commands.stream().filter(cmd -> cmd.getLabel().equalsIgnoreCase(command) || cmd.getAliases().contains(command)).findAny();
     }
 }

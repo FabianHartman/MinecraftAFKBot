@@ -23,11 +23,11 @@ public class MinecraftAFKBot {
     public static String TITLE;
     @Getter private static MinecraftAFKBot instance;
     @Getter public static Logger log = Logger.getLogger(Bot.class.getSimpleName());
-    @Getter private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+    @Getter private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
-    @Getter private SettingsConfig config;
-    @Getter private File refreshTokenFile;
-    private CommandLine cmdLine;
+    @Getter private final SettingsConfig config;
+    @Getter private final File refreshTokenFile;
+    private final CommandLine cmdLine;
 
     @Getter @Setter private Bot currentBot;
 

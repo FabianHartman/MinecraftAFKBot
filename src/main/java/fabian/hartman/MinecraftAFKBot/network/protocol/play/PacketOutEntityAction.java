@@ -34,10 +34,6 @@ public class PacketOutEntityAction extends Packet {
 
     public enum EntityAction {
         START_SNEAKING,
-        STOP_SNEAKING,
-        LEAVE_BED,
-        START_SPRINTING,
-        STOP_SPRINTING,
         OTHER
     }
 }

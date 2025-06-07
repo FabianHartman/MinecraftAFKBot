@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class EventManager {
-    @Getter private Map<Class<? extends Event>, List<Method>> registeredListener = new HashMap<>();
-    @Getter private Map<Class, Listener> classToInstanceMapping = new HashMap<>();
+    @Getter private final Map<Class<? extends Event>, List<Method>> registeredListener = new HashMap<>();
+    @Getter private final Map<Class, Listener> classToInstanceMapping = new HashMap<>();
 
     public void registerListener(Listener listener) {
         List<Method> annotatedMethods = new ArrayList<>();

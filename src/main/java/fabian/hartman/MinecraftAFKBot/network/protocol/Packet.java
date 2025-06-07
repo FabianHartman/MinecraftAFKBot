@@ -14,6 +14,7 @@ import fabian.hartman.MinecraftAFKBot.utils.nbt.StringTag;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.EnumSet;
@@ -177,7 +178,7 @@ public abstract class Packet {
             }
             byte[] b = new byte[length];
             in.readFully(b, 0, length);
-            s = new String(b, "UTF-8");
+            s = new String(b, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,7 @@ import fabian.hartman.MinecraftAFKBot.network.utils.ByteArrayDataInputWrapper;
 
 @Getter
 public class PacketOutUnsignedChatCommand extends Packet {
-    private String command;
+    private final String command;
 
     public PacketOutUnsignedChatCommand(String command) {
         this.command = command;

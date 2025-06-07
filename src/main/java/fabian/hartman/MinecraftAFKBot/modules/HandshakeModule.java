@@ -8,8 +8,8 @@ import fabian.hartman.MinecraftAFKBot.network.protocol.handshake.PacketOutHandsh
 @Getter
 public class HandshakeModule extends Module {
 
-    private String serverName;
-    private int serverPort;
+    private final String serverName;
+    private final int serverPort;
 
     public HandshakeModule(String serverName, int serverPort) {
         this.serverName = serverName;

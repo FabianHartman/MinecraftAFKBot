@@ -15,14 +15,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class MicrosoftAuthenticator implements IAuthenticator {
     private final static MethodAccessor LOGIN_RESPONSE_ACCESSOR = Reflect.getMethod(MsaAuthenticationService.class, "getLoginResponseFromToken", String.class);
     private final static MethodAccessor GET_PROFILE_ACCESSOR = Reflect.getMethod(MsaAuthenticationService.class, "getProfile");
 
-    public static final String CLIENT_ID = "fef9faea-d962-4476-9ce7-4960c8baa946";
+    public static final String CLIENT_ID = "6a0913ab-80bc-46fb-acfd-a5539bc910df";
     private final static Gson GSON = new Gson();
 
     @Override

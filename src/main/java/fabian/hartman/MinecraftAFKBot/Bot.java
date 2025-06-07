@@ -43,18 +43,18 @@ public class Bot {
     @Getter @Setter private boolean running;
     @Getter @Setter private boolean preventStartup;
     @Getter @Setter private boolean preventReconnect;
-    @Getter         private SettingsConfig config;
+    @Getter         private final SettingsConfig config;
     @Getter @Setter private int serverProtocol = ProtocolConstants.MC_1_8; //default 1.8
     @Getter @Setter private String serverHost;
     @Getter @Setter private int serverPort;
     @Getter @Setter private AuthData authData;
     @Getter @Setter private boolean wontConnect = false;
     @Getter         private ExecutorService commandsThread;
-    @Getter         private boolean noGui;
+    @Getter         private final boolean noGui;
 
-    @Getter         private EventManager eventManager;
+    @Getter         private final EventManager eventManager;
     @Getter         private CommandRegistry commandRegistry;
-    @Getter         private ModuleManager moduleManager;
+    @Getter         private final ModuleManager moduleManager;
 
     @Getter         private Player player;
 
@@ -159,7 +159,7 @@ public class Bot {
             for (int i = 0; i < 5; i++) {
                 ipAndPort = mojangAPI.getServerIP(getConfig().getRealmId());
                 if (ipAndPort == null) {
-                    System.out.println("Trying to resolve the server address... (Try "+ String.valueOf(i+1)+")");
+                    System.out.println("Trying to resolve the server address... (Try "+ (i + 1) +")");
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ignore) { }
@@ -243,7 +243,7 @@ public class Bot {
                         if (!getConfig().isAutoReconnect())
                             return;
                         try {
-                            Thread.sleep(getConfig().getAutoReconnectTime() * 1000);
+                            Thread.sleep(getConfig().getAutoReconnectTime() * 1000L);
                         } catch (InterruptedException ignore) { }
                         continue;
                     }
@@ -323,7 +323,7 @@ public class Bot {
                 System.out.println(MessageFormat.format("AFKBot will reconnect in {0} seconds...", String.valueOf(getConfig().getAutoReconnectTime())));
 
                 try {
-                    Thread.sleep(getConfig().getAutoReconnectTime() * 1000);
+                    Thread.sleep(getConfig().getAutoReconnectTime() * 1000L);
                 } catch (InterruptedException ignore) { }
 
                 if (getAuthData() == null) {

@@ -3,11 +3,10 @@ package fabian.hartman.MinecraftAFKBot.modules;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModuleManager {
-    @Getter private List<Module> loadedModules = new CopyOnWriteArrayList<>();
+    @Getter private final List<Module> loadedModules = new CopyOnWriteArrayList<>();
 
     public void disableAll() {
         getLoadedModules().stream()
@@ -25,13 +24,5 @@ public class ModuleManager {
 
     public boolean isLoaded(Module module) {
         return getLoadedModules().stream().anyMatch(m -> m.getClass().getName().equals(module.getClass().getName()));
-    }
-
-    public Optional<Module> getLoadedModule(Class moduleClass) {
-        if (moduleClass == null)
-            return Optional.empty();
-        if (!Module.class.isAssignableFrom(moduleClass))
-            return Optional.empty();
-        return getLoadedModules().stream().filter(m -> m.getClass().getName().equals(moduleClass.getName())).findAny();
     }
 }

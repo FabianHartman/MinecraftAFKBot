@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 public class StubArgumentType implements ArgumentType<Object> {
     @Getter
-    private int id;
-    private Consumer<StringReader> reader;
+    private final int id;
+    private final Consumer<StringReader> reader;
 
     public StubArgumentType(int id) {
         this.id = id;

@@ -8,8 +8,8 @@ public class CustomPrintStream extends PrintStream {
     private static final PrintStream originalSystemOut = System.out;
     private static CustomPrintStream systemOutToLogger;
 
-    private String packageOrClassToLog;
-    private Logger logger;
+    private final String packageOrClassToLog;
+    private final Logger logger;
 
     public static CustomPrintStream enableForPackage(String packageToLog, Logger logger) {
         systemOutToLogger = new CustomPrintStream(originalSystemOut, packageToLog, logger);

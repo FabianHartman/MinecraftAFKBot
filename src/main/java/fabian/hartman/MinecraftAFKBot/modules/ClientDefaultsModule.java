@@ -31,7 +31,7 @@ public class ClientDefaultsModule extends Module implements Listener {
 
     private Thread positionThread;
     private boolean joined;
-    private Set<UUID> onlinePlayers = new HashSet<>();
+    private final Set<UUID> onlinePlayers = new HashSet<>();
 
     @Override
     public void onEnable() {

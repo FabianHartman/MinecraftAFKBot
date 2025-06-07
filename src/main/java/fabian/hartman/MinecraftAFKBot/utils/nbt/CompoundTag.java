@@ -11,17 +11,6 @@ import java.util.Optional;
 
 @NoArgsConstructor
 public class CompoundTag extends Tag<Map<String, ? extends Tag<?>>> {
-    public <U extends Tag<?>> U get(String name, Class<U> clazz) {
-        Tag<?> tag = getValue().get(name);
-        if (tag == null) return null;
-        if (!tag.getClass().isAssignableFrom(clazz)) return null;
-        return clazz.cast(tag);
-    }
-
-    public boolean containsKey(String name) {
-        return getValue().containsKey(name);
-    }
-
     @Override
     protected CompoundTag read(ByteArrayDataInputWrapper in) {
         Map<String, Tag<?>> value = new HashMap<>();

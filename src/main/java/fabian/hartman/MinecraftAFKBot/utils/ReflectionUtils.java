@@ -6,9 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ReflectionUtils {
-
     private ReflectionUtils() {
-
     }
 
     public static List<Field> getAllFields(final Object object) {

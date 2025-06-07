@@ -33,7 +33,7 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 
 public class LoginModule extends Module implements Listener {
-    @Getter private String userName;
+    @Getter private final String userName;
 
     public LoginModule(String userName) {
         this.userName = userName;

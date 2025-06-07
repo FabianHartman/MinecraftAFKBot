@@ -20,10 +20,6 @@ public abstract class Tag<T> {
         return (U) TagRegistry.createTag(type).readNamed(in);
     }
 
-    protected <U extends Tag<?>> U readNextTag(ByteArrayDataInputWrapper in, Class<U> type) {
-        return (U) TagRegistry.createTag(type).read(in);
-    }
-
     protected <U extends Tag<?>> U readNextTag(ByteArrayDataInputWrapper in, byte type) {
         return (U) TagRegistry.createTag(type).read(in);
     }

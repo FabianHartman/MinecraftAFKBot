@@ -16,7 +16,6 @@ import fabian.hartman.MinecraftAFKBot.network.protocol.common.PacketOutPing;
 import fabian.hartman.MinecraftAFKBot.network.protocol.common.PacketOutResourcePackResponse;
 import fabian.hartman.MinecraftAFKBot.network.protocol.configuration.PacketInFinishConfiguration;
 import fabian.hartman.MinecraftAFKBot.network.protocol.configuration.PacketInKnownPacks;
-import fabian.hartman.MinecraftAFKBot.network.protocol.configuration.PacketInRegistryData;
 import fabian.hartman.MinecraftAFKBot.network.protocol.configuration.PacketOutFinishConfiguration;
 import fabian.hartman.MinecraftAFKBot.network.protocol.configuration.PacketOutKnownPacks;
 import fabian.hartman.MinecraftAFKBot.network.protocol.configuration.PacketOutPluginMessage;

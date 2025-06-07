@@ -12,7 +12,6 @@ import fabian.hartman.MinecraftAFKBot.network.utils.ByteArrayDataInputWrapper;
 import fabian.hartman.MinecraftAFKBot.network.utils.CryptManager;
 
 import java.util.BitSet;
-import java.util.Optional;
 import java.util.UUID;
 
 @Getter

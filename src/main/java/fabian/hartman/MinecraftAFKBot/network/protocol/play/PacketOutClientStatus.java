@@ -26,7 +26,5 @@ public class PacketOutClientStatus extends Packet {
 
     public enum Action {
         PERFORM_RESPAWN,
-        REQUEST_STATS,
-        TAKING_INVENTORY_ACHIEVEMENT
     }
 }

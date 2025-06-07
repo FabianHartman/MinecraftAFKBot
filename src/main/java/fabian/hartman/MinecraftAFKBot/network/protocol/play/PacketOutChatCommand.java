@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter
 public class PacketOutChatCommand extends Packet {
 
-    private String command;
+    private final String command;
     private List<CryptManager.SignableArgument> arguments;
 
     public PacketOutChatCommand(String command) {

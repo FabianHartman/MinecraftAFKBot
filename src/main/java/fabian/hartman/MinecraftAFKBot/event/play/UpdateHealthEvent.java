@@ -9,6 +9,4 @@ import fabian.hartman.MinecraftAFKBot.event.Event;
 public class UpdateHealthEvent extends Event {
     private int eid;
     private float health;
-    private int food;
-    private float saturation;
 }

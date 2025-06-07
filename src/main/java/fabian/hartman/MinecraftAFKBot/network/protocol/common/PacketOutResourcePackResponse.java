@@ -15,28 +15,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PacketOutResourcePackResponse extends Packet {
     private UUID uuid;
-    private Result result;
 
     @Override
     public void write(ByteArrayDataOutput out, int protocolId) throws IOException {
         if (protocolId >= ProtocolConstants.MC_1_20_3)
             writeUUID(uuid, out);
-        writeVarInt(result.ordinal(), out);
     }
 
     @Override
     public void read(ByteArrayDataInputWrapper in, NetworkHandler networkHandler, int length, int protocolId) throws IOException {
         // Only outgoing packet
-    }
-
-    public enum Result {
-        SUCCESSFULLY_LOADED,
-        DECLINED,
-        FAILED_DOWNLOAD,
-        ACCEPTED,
-        DOWNLOADED,
-        INVALID_URL,
-        FAILED_RELOAD,
-        DISCARDED
     }
 }
