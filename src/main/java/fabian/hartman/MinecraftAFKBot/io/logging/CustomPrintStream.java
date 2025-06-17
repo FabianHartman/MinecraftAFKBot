@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.logging.Logger;
 
 public class CustomPrintStream extends PrintStream {
-
     private static final PrintStream originalSystemOut = System.out;
     private static CustomPrintStream systemOutToLogger;
 

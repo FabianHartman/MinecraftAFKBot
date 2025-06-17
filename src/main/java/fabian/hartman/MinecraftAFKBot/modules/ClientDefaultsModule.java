@@ -21,6 +21,10 @@ import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutChatSession
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutConfirmTransaction;
 import fabian.hartman.MinecraftAFKBot.network.protocol.play.PacketOutPlayerLoaded;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,6 +54,18 @@ public class ClientDefaultsModule extends Module implements Listener {
         System.out.println(MessageFormat.format("Disconnected: {0}", event.getDisconnectMessage()));
         MinecraftAFKBot.getInstance().getCurrentBot().setRunning(false);
         onlinePlayers.clear();
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://afk.minecraft.fabianhartman.nl:1234/bot/stop"))
+                .header("X-API-KEY", "IOFEoiwjfwioemfoI*J3nwfeiojre9ngoirnUIH*(nwiofe boirehj4389jiowvreing489jfewoivrne8943jwfeionvUONHU&fw89ioemg0i8j4398r3in2eoivnr(*HE(Fuwn3jfweiovNFE(H89j3oio2i3")
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        try {
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception ignored) {}
     }
 
     @EventHandler
