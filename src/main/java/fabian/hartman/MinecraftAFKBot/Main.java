@@ -2,9 +2,6 @@ package fabian.hartman.MinecraftAFKBot;
 
 import org.apache.commons.cli.*;
 
-import java.awt.*;
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) {
         Options options = new Options();
